@@ -1,3 +1,5 @@
+import { Toaster } from "@/components/ui/toaster";
+import { NextAuthProvider } from "@/providers/next-auth";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import TRPCProvider from "./_trpc/provider";
@@ -18,7 +20,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={montserrat.className}>
-        <TRPCProvider>{children}</TRPCProvider>
+        <NextAuthProvider>
+          <TRPCProvider>
+            {children}
+            <Toaster />
+          </TRPCProvider>
+        </NextAuthProvider>
       </body>
     </html>
   );

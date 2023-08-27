@@ -1,10 +1,10 @@
 import { relations } from "drizzle-orm";
 import {
   boolean,
-  integer,
   pgEnum,
   pgTable,
   primaryKey,
+  real,
   text,
   timestamp,
   uuid,
@@ -14,7 +14,7 @@ export const products = pgTable("products", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
-  price: integer("price").notNull(),
+  price: real("price").notNull(),
   archived: boolean("archived").notNull().default(false),
   categoryId: uuid("categoryId")
     .notNull()
@@ -74,7 +74,7 @@ export const users = pgTable("users", {
   name: text("name").notNull(),
   email: text("email").unique().notNull(),
   password: text("password").notNull(),
-  role: userRoles("role").default("user"),
+  role: userRoles("role").default("user").notNull(),
   createdAt: timestamp("createdAt", { mode: "string" }).defaultNow(),
   updatedAt: timestamp("updatedAt", { mode: "string" }),
 });

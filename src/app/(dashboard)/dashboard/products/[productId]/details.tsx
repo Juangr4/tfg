@@ -1,12 +1,9 @@
 "use client";
 
 import { trpc } from "@/app/_trpc/client";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { type insertProductSchemaType } from "@/lib/types";
-import Image from "next/image";
 import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -16,6 +13,7 @@ import {
   NameFormField,
   PriceFormField,
 } from "../fields";
+import { ImageGrid } from "./image-grid";
 import { ImageUpload } from "./image-upload";
 
 interface ProductFormProps {
@@ -29,9 +27,6 @@ export const ProductDetails: FC<ProductFormProps> = ({
   const { data: categories } = trpc.categories.all.useQuery();
   const { data: category, refetch } = trpc.categories.find.useQuery(
     product.categoryId
-  );
-  const { data: imagesHref } = trpc.products.images.allHref.useQuery(
-    product.id ?? ""
   );
   const { mutate, isLoading } = trpc.products.update.useMutation();
   const [editing, setEditing] = useState(false);
@@ -75,18 +70,24 @@ export const ProductDetails: FC<ProductFormProps> = ({
               </div>
             </form>
           </Form>
-          <div>{product.id && <ImageUpload productId={product.id} />}</div>
+          <div className="h-full">
+            <ImageGrid
+              productId={product.id ?? ""}
+              className="max-h-[200px] mb-4"
+            />
+            {product.id && <ImageUpload productId={product.id} />}
+          </div>
         </div>
       </>
     );
 
   return (
-    <div className="grid grid-cols-2 w-full">
-      <div className="p-4">
+    <div className="grid grid-cols-2 w-full h-full">
+      <div className="p-4 flex flex-col justify-center items-center gap-4">
         <h1 className="text-4xl">{product.name}</h1>
         <p>{product.description}</p>
-        <p>Precio: {product.price}</p>
-        <p>Categoria: {!!category && category.name}</p>
+        <p>Price: {product.price}</p>
+        <p>Category: {!!category && category.name}</p>
         <p>
           {product.archived
             ? "El producto esta archivado"
@@ -100,22 +101,7 @@ export const ProductDetails: FC<ProductFormProps> = ({
           Edit
         </Button>
       </div>
-      <div className="w-full">
-        <ScrollArea className="rounded-md border p-4 grid grid-cols-2">
-          {imagesHref?.map((href) => (
-            <div key={href} className="w-2/5">
-              <AspectRatio ratio={16 / 9}>
-                <Image
-                  src={href}
-                  alt="Uploaded image"
-                  width={256}
-                  height={256}
-                />
-              </AspectRatio>
-            </div>
-          ))}
-        </ScrollArea>
-      </div>
+      <ImageGrid productId={product.id ?? ""} />
     </div>
   );
 };

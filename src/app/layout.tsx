@@ -1,7 +1,7 @@
 import { Toaster } from "@/components/ui/toaster";
-import { NextAuthProvider } from "@/providers/next-auth";
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
+import { NextAuthProvider } from "./_nextauth/provider";
 import TRPCProvider from "./_trpc/provider";
 import "./globals.css";
 

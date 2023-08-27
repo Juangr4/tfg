@@ -17,7 +17,7 @@ const ProductPage: React.FC<ProductPageProps> = async ({ params }) => {
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 p-4 w-full">
+    <div className="flex flex-col items-center justify-start gap-4 p-8 w-full h-full">
       <div className="flex items-center gap-4 w-full">
         <Link href={"/dashboard/products"}>
           <ArrowLeft />

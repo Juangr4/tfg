@@ -4,8 +4,9 @@ import { trpc } from "@/app/_trpc/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/components/ui/use-toast";
 import Image from "next/image";
-import { useState, type ChangeEvent, type FC } from "react";
+import { useRef, useState, type ChangeEvent, type FC } from "react";
 
 interface ImageUploadProps {
   productId: string;
@@ -14,6 +15,8 @@ interface ImageUploadProps {
 export const ImageUpload: FC<ImageUploadProps> = ({ productId }) => {
   const [file, setFile] = useState<File>();
   const { mutate, isLoading } = trpc.products.images.uploadUrl.useMutation();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { toast } = useToast();
 
   const onImageChange = (event: ChangeEvent<HTMLInputElement>) => {
     setFile(event.target.files?.[0]);
@@ -29,6 +32,13 @@ export const ImageUpload: FC<ImageUploadProps> = ({ productId }) => {
         fetch(`/api/images/${data}`, {
           method: "post",
           body: formData,
+        }).finally(() => {
+          toast({
+            title: "Completed",
+            description: "Image uploads completed successfully",
+          });
+          if (inputRef.current) inputRef.current.value = "";
+          setFile(undefined);
         });
       },
     });
@@ -36,8 +46,8 @@ export const ImageUpload: FC<ImageUploadProps> = ({ productId }) => {
 
   return (
     <div className="grid w-full max-w-sm items-center gap-1.5">
-      <Label htmlFor="picture">Imagenes</Label>
-      <Input id="picture" type="file" onChange={onImageChange} />
+      <Label htmlFor="picture">Images</Label>
+      <Input ref={inputRef} type="file" onChange={onImageChange} />
       {file && (
         <Image
           src={`${URL.createObjectURL(file)}`}

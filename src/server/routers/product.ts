@@ -1,5 +1,6 @@
 import { dbClient } from "@/db";
-import { products } from "@/db/schema";
+import { productImages, products } from "@/db/schema";
+import { removeImageFolder } from "@/lib/file-manager";
 import { insertProductSchema } from "@/lib/types";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
@@ -33,11 +34,36 @@ export const ProductRouter = router({
       )[0];
     }),
   delete: publicProcedure.input(z.string()).mutation(async ({ input }) => {
-    return await dbClient
-      .delete(products)
-      .where(eq(products.id, input))
-      .returning();
+    await dbClient.transaction(async (tx) => {
+      const removedProducts = await dbClient
+        .delete(products)
+        .where(eq(products.id, input))
+        .returning();
+
+      for (const product of removedProducts) {
+        await removeImageFolder(product.id);
+      }
+    });
   }),
+  paged: publicProcedure
+    .input(
+      z.object({
+        page: z.number().positive(),
+        productsPerPage: z.number().default(12),
+      })
+    )
+    .query(async ({ input }) => {
+      return await dbClient
+        .select({
+          product: products,
+          image: productImages,
+        })
+        .from(products)
+        .where(eq(products.archived, false))
+        .leftJoin(productImages, eq(products.id, productImages.productId))
+        .limit(input.productsPerPage)
+        .offset((input.page - 1) * input.productsPerPage);
+    }),
 
   images: ImageRouter,
 });

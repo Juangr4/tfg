@@ -1,3 +1,5 @@
+import { ShoppingCartProvider } from "./_shoppingcart";
+import Footer from "./footer";
 import MainHeader from "./header";
 import Navbar from "./navbar";
 
@@ -10,10 +12,13 @@ export default function EcommerceLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col h-screen">
-      <MainHeader />
-      <Navbar />
-      <main className="w-full flex justify-center">{children}</main>
-    </div>
+    <ShoppingCartProvider>
+      <div className="flex flex-col h-screen">
+        <MainHeader />
+        <Navbar />
+        <main className="w-full flex-1 justify-center h-auto">{children}</main>
+        <Footer />
+      </div>
+    </ShoppingCartProvider>
   );
 }

@@ -1,6 +1,8 @@
+import { type selectProductSchemaType } from "@/lib/types";
 import { relations } from "drizzle-orm";
 import {
   boolean,
+  json,
   pgEnum,
   pgTable,
   primaryKey,
@@ -14,13 +16,13 @@ export const products = pgTable("products", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
+  // price: decimal("price", { scale: 2 }).notNull(),
   price: real("price").notNull(),
   archived: boolean("archived").notNull().default(false),
   categoryId: uuid("categoryId")
     .notNull()
     .references(() => categories.id),
   createdAt: timestamp("createdAt", { mode: "string" }).defaultNow(),
-  updatedAt: timestamp("updatedAt", { mode: "string" }),
 });
 
 export const productsRelations = relations(products, ({ one, many }) => ({
@@ -35,7 +37,6 @@ export const categories = pgTable("categories", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
   createdAt: timestamp("createdAt", { mode: "string" }).defaultNow(),
-  updatedAt: timestamp("updatedAt", { mode: "string" }),
 });
 
 export const categoriesRelations = relations(categories, ({ many }) => ({
@@ -76,5 +77,38 @@ export const users = pgTable("users", {
   password: text("password").notNull(),
   role: userRoles("role").default("user").notNull(),
   createdAt: timestamp("createdAt", { mode: "string" }).defaultNow(),
-  updatedAt: timestamp("updatedAt", { mode: "string" }),
 });
+
+export const orderStatus = pgEnum("orderStatus", [
+  "requires_payment_method",
+  "requires_confirmation",
+  "requires_action",
+  "processing",
+  "requires_capture",
+  "canceled",
+  "succeeded",
+]);
+
+export const orders = pgTable("orders", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  userId: uuid("userId"),
+  items: json("items")
+    .$type<Array<{
+      product: selectProductSchemaType;
+      amount: number;
+    }> | null>()
+    .default(null),
+  total: real("total").notNull().default(0),
+  stripePaymentIntentId: text("stripePaymentIntentId").notNull().unique(),
+  status: orderStatus("status"),
+  name: text("name"),
+  email: text("email"),
+  createdAt: timestamp("createdAt").defaultNow(),
+});
+
+export const ordersRelations = relations(orders, ({ one }) => ({
+  user: one(users, {
+    fields: [orders.userId],
+    references: [users.id],
+  }),
+}));

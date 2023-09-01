@@ -18,7 +18,7 @@ import { CheckIcon, PlusIcon, ShoppingCartIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { type FC } from "react";
-import { useShoppingCart } from "../_shoppingcart";
+import { useCartStore } from "../_shoppingcart";
 
 interface EcommerceCardProps {
   product: selectProductSchemaType;
@@ -28,7 +28,10 @@ interface EcommerceCardProps {
 const EcommerceCard: FC<EcommerceCardProps> = ({ product, image }) => {
   const router = useRouter();
 
-  const { addToCart, isInCart } = useShoppingCart();
+  const addToCart = useCartStore((store) => store.addToCart);
+  const isInCart = useCartStore((store) => store.isInCart);
+  // Added cartItems to enforce a re-render when it changes.
+  const cartItems = useCartStore((store) => store.cartItems);
 
   const isIn = isInCart(product) !== undefined;
 

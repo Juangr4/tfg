@@ -13,10 +13,11 @@ import { imageHref } from "@/lib/utils";
 import { ShoppingCartIcon, TrashIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useShoppingCart } from "../_shoppingcart";
+import { useCartStore } from "../_shoppingcart";
 
 const ShoppingCartMenu = () => {
-  const { cartItems, removeFromCart } = useShoppingCart();
+  const cartItems = useCartStore((state) => state.cartItems);
+  const removeFromCart = useCartStore((state) => state.removeFromCart);
 
   return (
     <DropdownMenu>

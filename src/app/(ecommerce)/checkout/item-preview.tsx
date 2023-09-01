@@ -3,10 +3,11 @@ import { Input } from "@/components/ui/input";
 import { imageHref } from "@/lib/utils";
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { useShoppingCart, type CartItem } from "../_shoppingcart";
+import { useCartStore, type CartItem } from "../_shoppingcart";
 
 export const ItemPreview = ({ item }: { item: CartItem }) => {
-  const { removeFromCart, addToCart } = useShoppingCart();
+  const addToCart = useCartStore((store) => store.addToCart);
+  const removeFromCart = useCartStore((store) => store.removeFromCart);
   const inputRef = useRef<HTMLInputElement>(null);
   const [editing, setEditing] = useState(false);
 

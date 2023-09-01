@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 export default withAuth(
   function middleware(req) {
-    console.log(req.nextUrl.pathname);
     if (
       req.nextUrl.pathname.startsWith("/dashboard") &&
       req.nextauth.token?.role !== "admin"
@@ -17,4 +16,4 @@ export default withAuth(
   }
 );
 
-export const config = { matcher: ["/dashboard"] };
+export const config = { matcher: ["/dashboard", "/checkout/(.*)", "/profile"] };

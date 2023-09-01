@@ -9,12 +9,22 @@ const Footer = () => {
           <Link href={"/"}>Logo</Link>
           <p className="text-lg font-semibold">Example Company</p>
         </div>
-        <div>Links</div>
+        <div className="w-1/3 text-center">
+          <div className="mb-1">
+            <h4 className="text-md">Links</h4>
+            <Separator />
+          </div>
+          <Link href="/dashboard" className="text-sm">
+            Admin panel
+          </Link>
+        </div>
         <div>Resources</div>
       </div>
       <Separator />
-      <p>Social medias here</p>
-      <p>&copy;Copyright. All rights reserved.</p>
+      <div className="text-center">
+        <p>Social medias here</p>
+        <p>&copy;Copyright. All rights reserved.</p>
+      </div>
     </div>
   );
 };

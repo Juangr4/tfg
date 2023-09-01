@@ -1,5 +1,6 @@
 import {
   categories,
+  orderStatus,
   productImages,
   products,
   userRoles,
@@ -32,6 +33,7 @@ export const insertProductSchema = createInsertSchema(products, {
   name: (schema) => schema.name.min(1),
   description: (schema) => schema.description.min(1),
   price: (schema) => z.coerce.number().pipe(schema.price.multipleOf(0.01)),
+  // price: (schema) => schema.price.pipe(z.number().multipleOf(0.01).gte(0)),
   archived: (schema) => schema.archived.optional().default(false),
   categoryId: (schema) =>
     schema.categoryId.min(1, "Product must belong to a category"),
@@ -43,3 +45,6 @@ export type selectImageSchemaType = z.infer<typeof selectImageSchema>;
 
 export const insertImageSchema = createInsertSchema(productImages, {});
 export type insertImageSchemaType = z.infer<typeof insertImageSchema>;
+
+export const orderStatusSchema = z.enum(orderStatus.enumValues);
+export type orderStatusSchemaType = z.infer<typeof orderStatusSchema>;

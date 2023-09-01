@@ -26,7 +26,6 @@ export const ImageUpload: FC<ImageUploadProps> = ({ productId }) => {
     if (!file) return;
     mutate(productId, {
       onSuccess(data, variables, context) {
-        console.log(data);
         const formData = new FormData();
         formData.append("file", file);
         fetch(`/api/images/${data}`, {

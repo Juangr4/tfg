@@ -3,10 +3,10 @@ import { productImages } from "@/db/schema";
 import { removeImage } from "@/lib/file-manager";
 import { and, eq } from "drizzle-orm";
 import { z } from "zod";
-import { publicProcedure, router } from "../trpc";
+import { adminProcedure, publicProcedure, router } from "../trpc";
 
 export const ImageRouter = router({
-  uploadUrl: publicProcedure.input(z.string()).mutation(async ({ input }) => {
+  uploadUrl: adminProcedure.input(z.string()).mutation(async ({ input }) => {
     const image = await dbClient.query.productImages.findFirst({
       where: and(
         eq(productImages.productId, input),
@@ -24,7 +24,7 @@ export const ImageRouter = router({
         .returning()
     )[0].id;
   }),
-  delete: publicProcedure.input(z.string()).mutation(async ({ input }) => {
+  delete: adminProcedure.input(z.string()).mutation(async ({ input }) => {
     await dbClient.transaction(async (tx) => {
       const images = await tx
         .delete(productImages)

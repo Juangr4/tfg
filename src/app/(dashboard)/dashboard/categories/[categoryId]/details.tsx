@@ -42,7 +42,6 @@ export const CategoryDetails: FC<CategoryFormProps> = ({
   });
 
   const onSubmit = (data: insertCategorySchemaType) => {
-    console.log("Edited");
     mutate(data, {
       onError(error, variables, context) {
         if (!error.data?.zodError) return;

@@ -1,5 +1,6 @@
 import { serverClient } from "@/app/_trpc/serverClient";
 import EcommerceCard from "./card";
+import { Filters } from "./filters";
 import PaginationControls from "./pagination";
 
 export default async function ProductsPage({
@@ -7,19 +8,38 @@ export default async function ProductsPage({
 }: {
   searchParams: {
     page: string;
-    search: string;
+    search?: string;
+    categories?: string;
+    minPrice?: string;
+    maxPrice?: string;
   };
 }) {
   let page = Number(searchParams.page ?? 1);
   if (page < 1) page = 1;
 
-  const items = await serverClient.products.paged({ page });
+  const items = await serverClient.products.paged({
+    page,
+    filters: {
+      searchQuery: searchParams.search,
+      categories: searchParams.categories
+        ? searchParams.categories.split(",")
+        : undefined,
+      minPrice: searchParams.minPrice
+        ? Number(searchParams.minPrice)
+        : undefined,
+      maxPrice: searchParams.maxPrice
+        ? Number(searchParams.maxPrice)
+        : undefined,
+    },
+  });
 
   return (
     <div className="flex flex-col items-center justify-between p-24 gap-4 w-full">
       <h1 className="text-5xl pb-4">This is the Products Page</h1>
       <div className="flex justify-between w-full">
-        <div className="w-1/5">Filters</div>
+        <div className="w-1/5">
+          <Filters />
+        </div>
         <div className="flex-1">
           {items.length === 0 && (
             <p className="text-3xl text-center w-full">No products found.</p>

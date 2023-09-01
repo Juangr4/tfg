@@ -3,10 +3,10 @@ import { categories } from "@/db/schema";
 import { insertCategorySchema } from "@/lib/types";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
-import { publicProcedure, router } from "../trpc";
+import { adminProcedure, publicProcedure, router } from "../trpc";
 
 export const CategoryRouter = router({
-  create: publicProcedure.input(insertCategorySchema).mutation(async (opts) => {
+  create: adminProcedure.input(insertCategorySchema).mutation(async (opts) => {
     const { input } = opts;
 
     const newCategories = await dbClient
@@ -24,7 +24,7 @@ export const CategoryRouter = router({
       where: eq(categories.id, input),
     });
   }),
-  update: publicProcedure
+  update: adminProcedure
     .input(insertCategorySchema)
     .mutation(async ({ input }) => {
       if (!input.id) return;
@@ -36,7 +36,7 @@ export const CategoryRouter = router({
           .returning()
       )[0];
     }),
-  delete: publicProcedure.input(z.string()).mutation(async ({ input }) => {
+  delete: adminProcedure.input(z.string()).mutation(async ({ input }) => {
     return await dbClient
       .delete(categories)
       .where(eq(categories.id, input))

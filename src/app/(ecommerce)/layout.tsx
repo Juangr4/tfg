@@ -24,7 +24,7 @@ export default function EcommerceLayout({
     <div className="flex flex-col h-screen">
       <MainHeader />
       <Navbar />
-      <main className="w-full flex-1 justify-center h-auto">{children}</main>
+      <main className="w-full grid place-items-center h-full">{children}</main>
       <Footer />
     </div>
   );

@@ -7,7 +7,7 @@ import Credentials from "next-auth/providers/credentials";
 export const authOptions: NextAuthOptions = {
   providers: [
     Credentials({
-      name: "Credentials",
+      name: "credentials",
       credentials: {
         email: {
           label: "Email",
@@ -49,6 +49,9 @@ export const authOptions: NextAuthOptions = {
       if (session.user) session.user.role = token.role;
       return session;
     },
+  },
+  pages: {
+    signIn: "/login",
   },
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === "development",

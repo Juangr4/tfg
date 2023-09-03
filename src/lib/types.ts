@@ -12,6 +12,9 @@ import { z } from "zod";
 export const selectUserSchema = createSelectSchema(users);
 export type selectUserSchemaType = z.infer<typeof selectUserSchema>;
 
+export const insertUserSchema = createInsertSchema(users);
+export type insertUserSchemaType = z.infer<typeof insertUserSchema>;
+
 export const userRolesSchema = z.enum(userRoles.enumValues);
 export type userRolesSchemaType = z.infer<typeof userRolesSchema>;
 

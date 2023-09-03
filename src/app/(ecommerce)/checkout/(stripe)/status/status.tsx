@@ -18,7 +18,7 @@ export const PaymentDetails: FC<PaymentDetailsProps> = ({
 }) => {
   const stripe = useStripe();
   const [message, setMessage] = useState<string>();
-  const { data: order } = trpc.payments.getByPaymentIntent.useQuery(
+  const { data: order, isLoading } = trpc.payments.getByPaymentIntent.useQuery(
     paymentIntentId,
     {
       refetchInterval: 5000,
@@ -65,7 +65,10 @@ export const PaymentDetails: FC<PaymentDetailsProps> = ({
     <div className="grid place-items-center h-full">
       <div>
         <h3>Estado del pago: {message}</h3>
-        <h3>Estado del pedido: {order?.status}</h3>
+        <h3>
+          Estado del pedido:{" "}
+          {order ? order.status : isLoading ? "Loading..." : "Not found"}
+        </h3>
       </div>
     </div>
   );

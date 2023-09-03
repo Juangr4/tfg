@@ -80,9 +80,14 @@ export const PaymentRouter = router({
     }),
   getByPaymentIntent: loggedProcedure
     .input(z.string())
-    .query(async ({ input }) => {
-      return await dbClient.query.orders.findFirst({
+    .query(async ({ input, ctx }) => {
+      const order = await dbClient.query.orders.findFirst({
         where: eq(orders.stripePaymentIntentId, input),
       });
+      if (
+        order?.email === ctx.session?.user.email ||
+        ctx.session?.user.role === "admin"
+      )
+        return order;
     }),
 });

@@ -3,9 +3,9 @@ import { Input } from "@/components/ui/input";
 import { imageHref } from "@/lib/utils";
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { useCartStore, type CartItem } from "../_shoppingcart";
+import { useCartStore, type CartItemWithPhotoType } from "../_shoppingcart";
 
-export const ItemPreview = ({ item }: { item: CartItem }) => {
+export const ItemPreview = ({ item }: { item: CartItemWithPhotoType }) => {
   const addToCart = useCartStore((store) => store.addToCart);
   const removeFromCart = useCartStore((store) => store.removeFromCart);
   const inputRef = useRef<HTMLInputElement>(null);

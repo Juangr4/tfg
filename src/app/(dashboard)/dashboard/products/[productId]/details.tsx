@@ -3,7 +3,10 @@
 import { trpc } from "@/app/_trpc/client";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
 import { type insertProductSchemaType } from "@/lib/types";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { useState, type FC } from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -44,17 +47,25 @@ export const ProductDetails: FC<ProductFormProps> = ({
     });
   };
 
-  if (editing)
-    return (
-      <>
-        <div className="flex justify-center items-center gap-8 p-4">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <NameFormField form={form} />
-              <DescriptionFormField form={form} />
-              <PriceFormField form={form} />
-              <ArchivedFormField form={form} />
-              <CategoryFormField form={form} categories={categories ?? []} />
+  return (
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+          <div className="flex items-center gap-4 w-full mb-2">
+            <Link href={"/dashboard/products"}>
+              <ArrowLeft />
+            </Link>
+            <h1 className="text-5xl">Product View</h1>
+            {!editing && (
+              <Button
+                onClick={() => {
+                  setEditing(true);
+                }}
+              >
+                Edit
+              </Button>
+            )}
+            {editing && (
               <div className="flex gap-4 justify-center">
                 <Button disabled={isLoading} type="submit">
                   Save
@@ -68,40 +79,58 @@ export const ProductDetails: FC<ProductFormProps> = ({
                   Cancel
                 </Button>
               </div>
-            </form>
-          </Form>
-          <div className="h-full">
-            <ImageGrid
-              productId={product.id ?? ""}
-              className="max-h-[200px] mb-4"
-            />
-            {product.id && <ImageUpload productId={product.id} />}
+            )}
           </div>
-        </div>
-      </>
-    );
-
-  return (
-    <div className="grid grid-cols-2 w-full h-full">
-      <div className="p-4 flex flex-col justify-center items-center gap-4">
-        <h1 className="text-4xl">{product.name}</h1>
-        <p>{product.description}</p>
-        <p>Price: {product.price}</p>
-        <p>Category: {!!category && category.name}</p>
-        <p>
-          {product.archived
-            ? "El producto esta archivado"
-            : "El producto es visible"}
-        </p>
-        <Button
-          onClick={() => {
-            setEditing(true);
-          }}
-        >
-          Edit
-        </Button>
-      </div>
-      <ImageGrid productId={product.id ?? ""} />
-    </div>
+          <Separator />
+          <div className="grid grid-cols-2 w-full">
+            <div className="flex flex-col gap-4 text-lg p-2">
+              {!editing && (
+                <>
+                  <h1>
+                    Name : <span>{product.name}</span>
+                  </h1>
+                  <p>
+                    Description: <span>{product.description}</span>
+                  </p>
+                  <p>
+                    Price: <span>{product.price}$</span>
+                  </p>
+                  <p>
+                    Category:{" "}
+                    {!!category && (
+                      <Button variant={"link"} className="text-lg" asChild>
+                        <Link href={`/products/categories/${category.id}`}>
+                          {category.name}
+                        </Link>
+                      </Button>
+                    )}
+                  </p>
+                  <p>Archived: {String(product.archived)}</p>
+                </>
+              )}
+              {editing && (
+                <div className="space-y-8">
+                  <NameFormField form={form} />
+                  <DescriptionFormField form={form} />
+                  <PriceFormField form={form} />
+                  <ArchivedFormField form={form} />
+                  <CategoryFormField
+                    form={form}
+                    categories={categories ?? []}
+                  />
+                </div>
+              )}
+            </div>
+            <div className="h-full p-2">
+              <ImageGrid
+                productId={product.id ?? ""}
+                className="h-[400px] mb-4"
+              />
+              {editing && product.id && <ImageUpload productId={product.id} />}
+            </div>
+          </div>
+        </form>
+      </Form>
+    </>
   );
 };

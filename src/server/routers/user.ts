@@ -2,6 +2,7 @@ import { dbClient } from "@/db";
 import { users } from "@/db/schema";
 import { insertUserSchema } from "@/lib/types";
 import { TRPCError } from "@trpc/server";
+import { compare, hash } from "bcrypt";
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import {
@@ -11,6 +12,7 @@ import {
   router,
 } from "../trpc";
 
+// TODO: Remove password from returned users to client;
 export const UsersRouter = router({
   all: adminProcedure.query(async () => {
     return await dbClient.select().from(users);
@@ -31,9 +33,10 @@ export const UsersRouter = router({
   create: publicProcedure
     .input(insertUserSchema)
     .mutation(async ({ input }) => {
+      const hashedPassword = await hash(input.password, 10);
       const newUsers = await dbClient
         .insert(users)
-        .values({ ...input, password: input.password })
+        .values({ ...input, password: hashedPassword })
         .returning();
       return newUsers[0];
     }),
@@ -45,11 +48,12 @@ export const UsersRouter = router({
       const user = await dbClient.query.users.findFirst({
         where: eq(users.email, ctx.session.user.email),
       });
-      if (!user || user.password !== input.oldPassword)
+      if (!user || !(await compare(input.oldPassword, user.password)))
         throw new TRPCError({ code: "BAD_REQUEST" });
+      const hashedPassword = await hash(input.newPassword, 10);
       await dbClient
         .update(users)
-        .set({ password: input.newPassword })
+        .set({ password: hashedPassword })
         .where(eq(users.email, ctx.session.user.email));
     }),
   update: loggedProcedure

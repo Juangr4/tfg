@@ -3,11 +3,13 @@
 import {
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
   type Column,
   type ColumnDef,
+  type ColumnFiltersState,
   type PaginationState,
   type SortingState,
   type Table as TanstackTable,
@@ -34,6 +36,7 @@ import {
   ChevronRightIcon,
 } from "lucide-react";
 import { useState } from "react";
+import { Input } from "./ui/input";
 
 interface DataTableProps<TData, TValue> {
   columns: Array<ColumnDef<TData, TValue>>;
@@ -51,22 +54,39 @@ export function DataTable<TData, TValue>({
     pageIndex: 0,
     pageSize: 5,
   });
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState<string>("");
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: setSorting,
     onPaginationChange: setPagination,
+    onColumnFiltersChange: setColumnFilters,
+    onGlobalFilterChange: setGlobalFilter,
     state: {
       sorting,
       pagination,
+      globalFilter,
+      columnFilters,
     },
   });
 
   return (
     <div className={className}>
+      <div className="flex items-center py-4">
+        <Input
+          placeholder="Filter columns..."
+          value={globalFilter}
+          onChange={(event) => {
+            setGlobalFilter(event.target.value);
+          }}
+          className="max-w-sm"
+        />
+      </div>
       <div className="rounded-md border w-full">
         <Table>
           <TableHeader>

@@ -1,12 +1,12 @@
 "use client";
 import { DataTableColumnHeader } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
-import { type selectUserSchemaType } from "@/lib/types";
+import { type selectOrderSchemaType } from "@/lib/types";
 import { type ColumnDef } from "@tanstack/react-table";
 import { Pencil, Trash } from "lucide-react";
 import Link from "next/link";
 
-export const userColumnsDefinition: Array<ColumnDef<selectUserSchemaType>> = [
+export const orderColumnsDefinition: Array<ColumnDef<selectOrderSchemaType>> = [
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -18,23 +18,29 @@ export const userColumnsDefinition: Array<ColumnDef<selectUserSchemaType>> = [
     header: "Email",
   },
   {
-    accessorKey: "role",
-    header: "Role",
+    accessorKey: "phone",
+    header: "Phone",
+  },
+  {
+    accessorKey: "isPaid",
+    header: "Paid",
   },
   {
     accessorKey: "createdAt",
-    header: "Created At",
+    header: ({ column }) => {
+      return <DataTableColumnHeader column={column} title="Created At" />;
+    },
   },
   {
     id: "actions",
     header: "Actions",
     cell: ({ row }) => {
-      const user = row.original;
+      const order = row.original;
 
       return (
         <div>
           <Button variant="ghost" asChild>
-            <Link href={`/dashboard/users/${user.id}`}>
+            <Link href={`/dashboard/orders/${order.id}`}>
               <Pencil className="h-4 w-4" />
             </Link>
           </Button>

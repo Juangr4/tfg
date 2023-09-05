@@ -1,4 +1,3 @@
-import { type selectProductSchemaType } from "@/lib/types";
 import { relations } from "drizzle-orm";
 import {
   boolean,
@@ -79,31 +78,18 @@ export const users = pgTable("users", {
   createdAt: timestamp("createdAt", { mode: "string" }).defaultNow(),
 });
 
-export const orderStatus = pgEnum("orderStatus", [
-  "requires_payment_method",
-  "requires_confirmation",
-  "requires_action",
-  "processing",
-  "requires_capture",
-  "canceled",
-  "succeeded",
-]);
-
 export const orders = pgTable("orders", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: uuid("userId"),
-  items: json("items")
-    .$type<Array<{
-      product: selectProductSchemaType;
-      amount: number;
-    }> | null>()
-    .default(null),
+  // Removed type of items because it give problems
+  items: json("items").default(null),
   total: real("total").notNull().default(0),
-  stripePaymentIntentId: text("stripePaymentIntentId").notNull().unique(),
-  status: orderStatus("status"),
+  isPaid: boolean("isPaid").notNull().default(false),
   name: text("name"),
   email: text("email"),
-  createdAt: timestamp("createdAt").defaultNow(),
+  phone: text("phone"),
+  address: text("address"),
+  createdAt: timestamp("createdAt", { mode: "string" }).defaultNow(),
 });
 
 export const ordersRelations = relations(orders, ({ one }) => ({

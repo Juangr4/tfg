@@ -13,7 +13,7 @@ const routes = [
     name: "Products",
   },
   {
-    path: "/about",
+    path: "/#about",
     name: "About Us",
   },
   {
@@ -26,7 +26,7 @@ const Navbar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="container flex justify-center">
+    <div className="container flex justify-center mb-2">
       <div className="flex w-fit gap-8 text-lg font-medium">
         {routes.map((route, index) => (
           <Link

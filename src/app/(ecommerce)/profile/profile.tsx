@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { selectUserSchema, type selectUserSchemaType } from "@/lib/types";
-import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useState, type FC } from "react";
 import { type z } from "zod";
 import { trpc } from "../../_trpc/client";
@@ -32,6 +32,7 @@ const profileSchema = selectUserSchema.omit({
 });
 
 export const AccountForm: FC<AccountFormProps> = ({ user: defaultValues }) => {
+  const { update } = useSession();
   const [user, setUser] = useState(defaultValues);
   const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
@@ -43,7 +44,8 @@ export const AccountForm: FC<AccountFormProps> = ({ user: defaultValues }) => {
     mutate(data, {
       async onSuccess(newUser, variables, context) {
         if (!newUser) return;
-        await signOut({ callbackUrl: "/login" });
+        setUser(newUser);
+        await update(newUser);
       },
     });
   }

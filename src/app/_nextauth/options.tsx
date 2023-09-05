@@ -1,5 +1,6 @@
 import { dbClient } from "@/db";
 import { users } from "@/db/schema";
+import { compare } from "bcrypt";
 import { and, eq } from "drizzle-orm";
 import { type NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
@@ -20,13 +21,11 @@ export const authOptions: NextAuthOptions = {
         if (!credentials?.email || !credentials.password) return null;
 
         const user = await dbClient.query.users.findFirst({
-          where: and(
-            eq(users.email, credentials.email),
-            eq(users.password, credentials.password)
-          ),
+          where: and(eq(users.email, credentials.email)),
         });
 
-        if (!user) return null;
+        if (!user || !(await compare(credentials.password, user.password)))
+          return null;
 
         return {
           id: user.id,
@@ -41,8 +40,20 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) token.role = user.role;
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === "update") {
+        // Updating token via useSession().update from client.
+        if (session?.id) {
+          const serverUser = await dbClient.query.users.findFirst({
+            where: eq(users.id, session.id),
+          });
+          token.name = serverUser?.name;
+          token.email = serverUser?.email;
+          token.role = serverUser?.role ?? "user";
+        }
+      } else if (user) {
+        token.role = user.role;
+      }
       return token;
     },
     async session({ session, token }) {

@@ -8,7 +8,7 @@ const ProductsPage = async () => {
   const products = await serverClient.products.all();
 
   return (
-    <div className="flex flex-col items-center justify-start w-full gap-4 p-4">
+    <div className="flex flex-col items-center justify-start h-full w-full gap-4 p-12">
       <div className="flex justify-start items-center w-full gap-4">
         <h1 className="text-5xl">Products</h1>
         <DialogProductForm />

@@ -1,6 +1,6 @@
 import {
   categories,
-  orderStatus,
+  orders,
   productImages,
   products,
   userRoles,
@@ -11,6 +11,13 @@ import { z } from "zod";
 
 export const selectUserSchema = createSelectSchema(users);
 export type selectUserSchemaType = z.infer<typeof selectUserSchema>;
+
+export const selectUserSchemaWithoutPassword = selectUserSchema.omit({
+  password: true,
+});
+export type selectUserSchemaWithoutPasswordType = z.infer<
+  typeof selectUserSchemaWithoutPassword
+>;
 
 export const insertUserSchema = createInsertSchema(users);
 export type insertUserSchemaType = z.infer<typeof insertUserSchema>;
@@ -49,5 +56,11 @@ export type selectImageSchemaType = z.infer<typeof selectImageSchema>;
 export const insertImageSchema = createInsertSchema(productImages, {});
 export type insertImageSchemaType = z.infer<typeof insertImageSchema>;
 
-export const orderStatusSchema = z.enum(orderStatus.enumValues);
-export type orderStatusSchemaType = z.infer<typeof orderStatusSchema>;
+export const selectOrderSchema = createSelectSchema(orders, {});
+export type selectOrderSchemaType = z.infer<typeof selectOrderSchema>;
+
+export const cartItem = z.object({
+  product: selectProductSchema,
+  amount: z.number(),
+});
+export type cartItemType = z.infer<typeof cartItem>;

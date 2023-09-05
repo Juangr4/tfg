@@ -9,7 +9,7 @@ export default {
     port: 5432,
     database: "tfg",
     user: "tfg",
-    password: "secretpasw",
+    password: "tfg",
   },
   verbose: false,
 } satisfies Config;

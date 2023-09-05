@@ -40,10 +40,10 @@ const EcommerceCard: FC<EcommerceCardProps> = ({ product, image }) => {
       onClick={() => {
         router.push(`/products/${product.id}`);
       }}
-      className="w-full hover:cursor-pointer"
+      className="w-full hover:cursor-pointer grid p-2"
     >
-      <CardContent className="flex flex-col gap-4 items-center">
-        <div className="grid place-items-center p-2">
+      <CardContent className="grid place-items-center border h-full">
+        <div className="grid place-items-center">
           <Image
             src={imageHref(image)}
             alt={product.name}

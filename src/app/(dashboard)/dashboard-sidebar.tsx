@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -22,12 +22,8 @@ const routes = [
     path: "/dashboard/categories",
   },
   {
-    name: "Billboards",
-    path: "/dashboard",
-  },
-  {
-    name: "Transport",
-    path: "/dashboard",
+    name: "Orders",
+    path: "/dashboard/orders",
   },
 ];
 
@@ -35,25 +31,21 @@ const DashboardSidebar = () => {
   const pathname = usePathname();
 
   return (
-    <div className="flex flex-col justify-between bg-[#55D6BE]">
-      <div className="text-xl">This is the logo</div>
+    <div className="flex flex-col justify-center border-r-2">
       <nav className="flex flex-col items-center justify-center gap-x-2">
         {routes.map((route, index) => {
           return (
-            <Link
-              key={index}
-              href={route.path}
-              className={cn(
-                "bg-[#55D6BE] p-2 hover:bg-[#ACFCD9] rounded-md",
-                pathname === route.path ? "underline" : ""
-              )}
-            >
-              {route.name}
-            </Link>
+            <Button key={index} className="w-full m-2" variant={"link"} asChild>
+              <Link
+                href={route.path}
+                className={pathname === route.path ? "underline" : ""}
+              >
+                {route.name}
+              </Link>
+            </Button>
           );
         })}
       </nav>
-      <div>This is the profile icon</div>
     </div>
   );
 };

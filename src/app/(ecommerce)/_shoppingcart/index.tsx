@@ -1,22 +1,22 @@
 import {
+  cartItem,
   selectImageSchema,
-  selectProductSchema,
   type selectImageSchemaType,
   type selectProductSchemaType,
 } from "@/lib/types";
 import { z } from "zod";
 import { create } from "zustand";
 
-export const CartItem = z.object({
-  product: selectProductSchema,
+export const CartItemWithPhoto = cartItem.augment({
   image: selectImageSchema.optional(),
-  amount: z.number().gte(0),
 });
-export type CartItemType = z.infer<typeof CartItem>;
+export type CartItemWithPhotoType = z.infer<typeof CartItemWithPhoto>;
 
 interface State {
-  cartItems: CartItemType[];
-  isInCart: (product: selectProductSchemaType) => CartItemType | undefined;
+  cartItems: CartItemWithPhotoType[];
+  isInCart: (
+    product: selectProductSchemaType
+  ) => CartItemWithPhotoType | undefined;
   addToCart: (
     product: selectProductSchemaType,
     image?: selectImageSchemaType,
@@ -77,12 +77,13 @@ export const useCartStore = create<State>()((set, get) => ({
   },
   clearCart: () => {
     set((state) => ({ cartItems: [] }));
+    get().save();
   },
   load: () => {
     if (get().loaded) return;
     try {
       const cartItems = z
-        .array(CartItem)
+        .array(CartItemWithPhoto)
         .parse(JSON.parse(localStorage.getItem("cartItems") ?? "[]"));
       set((state) => ({ cartItems, loaded: true }));
     } catch (error) {

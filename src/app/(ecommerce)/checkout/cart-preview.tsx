@@ -18,13 +18,13 @@ export const CartPreview = () => {
     .map((item) => item.product.price * item.amount)
     .reduce((acc, current) => acc + current, 0);
 
-  const { mutate, isLoading } = trpc.payments.create.useMutation();
+  const { mutate, isLoading } = trpc.orders.create.useMutation();
 
   const performPayment = () => {
     mutate(cartItems, {
       onSuccess(data, variables, context) {
         if (data) {
-          router.push(`/checkout/perform?clientSecret=${data}`);
+          router.push(data);
         }
       },
     });

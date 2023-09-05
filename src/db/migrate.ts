@@ -1,3 +1,4 @@
+import { hash } from "bcrypt";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import { exit } from "process";
@@ -11,12 +12,13 @@ const main = async () => {
   const migrationsClient = postgres(url);
   const migratorClient = drizzle(migrationsClient, { logger: false });
 
+  const adminPassword = await hash("admin", 10);
   await migratorClient
     .insert(users)
     .values({
       name: "admin",
       email: "admin@gmail.com",
-      password: "admin",
+      password: adminPassword,
       role: "admin",
     })
     .onConflictDoNothing();

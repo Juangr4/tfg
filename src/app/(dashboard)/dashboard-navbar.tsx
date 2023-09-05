@@ -18,15 +18,14 @@ import Link from "next/link";
 const DashboardNavbar = () => {
   // TODO: update with user session information
   return (
-    <header className="flex w-full items-center justify-between h-12 bg-[#55D6BE] p-4">
-      <div className="text-xl">This is the logo</div>
+    <header className="flex w-full items-center justify-between h-12 p-6 border-b-2">
+      <div className="text-xl">
+        <span className="font-semibold">Logo</span> dashboard
+      </div>
       <nav className="flex items-center justify-center gap-x-2">
-        <Link
-          href="/"
-          className="bg-[#55D6BE] p-2 hover:bg-[#ACFCD9] rounded-md"
-        >
-          Ir a la tienda
-        </Link>
+        <Button variant={"link"} asChild>
+          <Link href="/">Visitar la tienda</Link>
+        </Button>
       </nav>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

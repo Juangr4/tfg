@@ -3,6 +3,7 @@
 import { trpc } from "@/app/_trpc/client";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
@@ -17,7 +18,8 @@ import {
   type selectProductSchemaType,
 } from "@/lib/types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, X } from "lucide-react";
+import { ArrowLeft, Check, X } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, type FC } from "react";
 import { useForm } from "react-hook-form";
@@ -80,66 +82,90 @@ export const CategoryDetails: FC<CategoryFormProps> = ({
     return () => {};
   }, [editing]);
 
-  if (editing)
-    return (
+  return (
+    <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <NameFormField form={form} />
-          <div className="flex gap-4 justify-center">
-            <Button disabled={isLoading} type="submit">
-              Save
-            </Button>
-            <Button
-              disabled={isLoading}
-              onClick={() => {
-                setEditing(false);
-              }}
-            >
-              Cancel
-            </Button>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8 w-full"
+        >
+          <div className="flex items-center gap-4">
+            <Link href={"/dashboard/categories"}>
+              <ArrowLeft />
+            </Link>
+            <h1 className="text-5xl">Category View</h1>
+            {!editing && (
+              <Button
+                onClick={() => {
+                  setEditing(true);
+                }}
+              >
+                Edit
+              </Button>
+            )}
+            {editing && (
+              <div className="flex gap-4 justify-center">
+                <Button disabled={isLoading} type="submit">
+                  Save
+                </Button>
+                <Button
+                  disabled={isLoading}
+                  onClick={() => {
+                    setEditing(false);
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+            )}
+          </div>
+          <Separator />
+          <div className="w-auto">
+            {!editing && (
+              <h1 className="text-lg">
+                Name: <span>{category.name}</span>
+              </h1>
+            )}
+            {editing && <NameFormField form={form} />}
+          </div>
+          <div className="border p-2">
+            <p className="text-2xl text-center underline mb-2">
+              Products inside category
+            </p>
+            {products.length !== 0 ? (
+              <Table>
+                <TableHeader className="border-b">
+                  <TableHead className="text-center">Name</TableHead>
+                  <TableHead className="text-center">Price</TableHead>
+                  <TableHead className="text-center">Archived</TableHead>
+                </TableHeader>
+                <TableBody>
+                  {products.map((product) => (
+                    <TableRow
+                      key={product.id}
+                      onClick={() => {
+                        router.push(`/dashboard/products/${product.id}`);
+                      }}
+                    >
+                      <TableCell className="text-center">
+                        {product.name}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {product.price}
+                      </TableCell>
+                      <TableCell className="flex justify-center">
+                        {product.archived ? <Check /> : <X />}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            ) : (
+              <h2 className="text-xl">No products where found</h2>
+            )}
           </div>
         </form>
       </Form>
-    );
-
-  return (
-    <>
-      <h1 className="text-4xl">{category.name}</h1>
-      <Button
-        onClick={() => {
-          setEditing(true);
-        }}
-      >
-        Edit
-      </Button>
-      <p className="text-2xl">Products inside category</p>
-      {products.length !== 0 ? (
-        <Table>
-          <TableHeader>
-            <TableHead className="text-center">Name</TableHead>
-            <TableHead className="text-center">Price</TableHead>
-            <TableHead className="text-center">Archived</TableHead>
-          </TableHeader>
-          <TableBody>
-            {products.map((product) => (
-              <TableRow
-                key={product.id}
-                onClick={() => {
-                  router.push(`/dashboard/products/${product.id}`);
-                }}
-              >
-                <TableCell className="text-center">{product.name}</TableCell>
-                <TableCell className="text-center">{product.price}</TableCell>
-                <TableCell className="flex justify-center">
-                  {product.archived ? <Check /> : <X />}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      ) : (
-        <h2 className="text-xl">No products where found</h2>
-      )}
     </>
   );
 };

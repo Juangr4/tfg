@@ -1,7 +1,7 @@
 import { serverClient } from "@/app/_trpc/serverClient";
-import { Separator } from "@/components/ui/separator";
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
+import { dbClient } from "@/db";
+import { products } from "@/db/schema";
+import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { CategoryDetails } from "./details";
 
@@ -16,16 +16,13 @@ const CategoryPage: React.FC<CategoryPageProps> = async ({ params }) => {
     return redirect("dashboard/categories");
   }
 
+  const productsInside = await dbClient.query.products.findMany({
+    where: eq(products.categoryId, category.id),
+  });
+
   return (
-    <div className="flex flex-col items-center gap-4 p-4">
-      <div className="flex items-center gap-4">
-        <Link href={"/dashboard/categories"}>
-          <ArrowLeft />
-        </Link>
-        <h1 className="text-5xl">Category View</h1>
-      </div>
-      <Separator />
-      <CategoryDetails category={category} products={[]} />
+    <div className="flex flex-col items-start h-full w-full gap-4 p-4">
+      <CategoryDetails category={category} products={productsInside} />
     </div>
   );
 };

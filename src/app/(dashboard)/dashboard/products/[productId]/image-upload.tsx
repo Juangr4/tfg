@@ -44,20 +44,29 @@ export const ImageUpload: FC<ImageUploadProps> = ({ productId }) => {
   };
 
   return (
-    <div className="grid w-full max-w-sm items-center gap-1.5">
-      <Label htmlFor="picture">Images</Label>
-      <Input ref={inputRef} type="file" onChange={onImageChange} />
-      {file && (
+    <div className="grid grid-cols-2 w-full place-items-center gap-1">
+      <div className="grid gap-1">
+        <Label htmlFor="picture" className="text-sm">
+          Select an image to upload.
+        </Label>
+        <Input ref={inputRef} type="file" onChange={onImageChange} />
+        <Button
+          disabled={isLoading || !file}
+          onClick={uploadImage}
+          className="w-full"
+        >
+          Upload selected image
+        </Button>
+      </div>
+      <div>
         <Image
-          src={`${URL.createObjectURL(file)}`}
+          src={file ? `${URL.createObjectURL(file)}` : "/no-image.svg"}
           alt="Uploaded image"
           width={256}
           height={256}
+          className={isLoading ? "opacity-50" : ""}
         />
-      )}
-      <Button disabled={isLoading || !file} onClick={uploadImage}>
-        Upload image
-      </Button>
+      </div>
     </div>
   );
 };

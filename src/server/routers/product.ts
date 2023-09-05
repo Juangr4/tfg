@@ -83,7 +83,7 @@ export const ProductRouter = router({
       }
 
       return await dbClient
-        .select({
+        .selectDistinctOn([products.id], {
           product: products,
           image: productImages,
         })

@@ -53,14 +53,12 @@ export const OrderRouter = router({
           .map((item) => item.product.price * item.amount)
           .reduce((acc, current) => acc + current, 0);
 
-        console.log(subtotal);
-
         const newOrders = await tx
           .insert(orders)
           .values({
             email: user.email,
             items: itemsToBuy,
-            total: subtotal,
+            total: Math.round(subtotal * 100) / 100, // Because round return to closest integer
             name: user.name,
             userId: user.id,
           })
@@ -103,5 +101,24 @@ export const OrderRouter = router({
       return await dbClient.query.orders.findMany({
         where: eq(orders.userId, user.id),
       });
+    }),
+  allByUser: loggedProcedure
+    .input(z.string().optional())
+    .query(async ({ input: userId, ctx }) => {
+      if (ctx.session?.user.role === "admin" && userId) {
+        return await dbClient
+          .select()
+          .from(orders)
+          .where(eq(orders.userId, userId));
+      }
+      if (!ctx.session?.user.email) return;
+      const user = await dbClient.query.users.findFirst({
+        where: eq(users.email, ctx.session.user.email),
+      });
+      if (!user) return;
+      return await dbClient
+        .select()
+        .from(orders)
+        .where(eq(orders.userId, user.id));
     }),
 });

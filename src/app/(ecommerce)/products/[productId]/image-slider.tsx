@@ -1,17 +1,18 @@
 "use client";
 
-import { trpc } from "@/app/_trpc/client";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { imageHref } from "@/lib/utils";
+import { type selectImageSchemaType } from "@/lib/types";
+import { cn, imageHref } from "@/lib/utils";
 import Image from "next/image";
 import { useState } from "react";
 
 interface ImageSliderProps {
-  productId: string;
+  // productId: string;
+  images: selectImageSchemaType[];
 }
 
-const ImageSlider = ({ productId }: ImageSliderProps) => {
-  const [images] = trpc.products.images.all.useSuspenseQuery(productId);
+const ImageSlider = ({ images }: ImageSliderProps) => {
+  console.log(images);
 
   const [selected, setSelected] = useState(
     images.length === 0 ? undefined : images[0]
@@ -25,7 +26,7 @@ const ImageSlider = ({ productId }: ImageSliderProps) => {
           className="flex justify-center items-center"
         >
           <Image
-            src={selected === undefined ? "" : imageHref(selected)}
+            src={imageHref(selected)}
             alt={"image"}
             width={512}
             height={512}
@@ -34,10 +35,33 @@ const ImageSlider = ({ productId }: ImageSliderProps) => {
         </AspectRatio>
       </div>
       <div className="snap-x overflow-x-scroll h-[200px] grid grid-flow-col border">
+        {images.length === 0 && (
+          <div
+            className={"w-[200px] h-full flex justify-center border-4"}
+            onClick={() => {
+              setSelected(undefined);
+            }}
+          >
+            <AspectRatio
+              ratio={16 / 9}
+              className="h-auto w-full flex justify-center items-center snap-start border"
+            >
+              <Image
+                src={imageHref(undefined)}
+                alt={"image"}
+                width={128}
+                height={128}
+              />
+            </AspectRatio>
+          </div>
+        )}
         {images.map((image) => (
           <div
             key={image.id}
-            className="w-[200px] h-full flex justify-center"
+            className={cn(
+              "w-[200px] h-full flex justify-center",
+              selected?.id === image.id ? "border-4" : ""
+            )}
             onClick={() => {
               setSelected(image);
             }}

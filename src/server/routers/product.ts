@@ -6,6 +6,7 @@ import { and, eq, gte, ilike, inArray, lte } from "drizzle-orm";
 import { z } from "zod";
 import { adminProcedure, publicProcedure, router } from "../trpc";
 import { ImageRouter } from "./image";
+import { ReviewRouter } from "./review";
 
 export const ProductRouter = router({
   all: publicProcedure.query(async () => {
@@ -95,4 +96,5 @@ export const ProductRouter = router({
     }),
 
   images: ImageRouter,
+  reviews: ReviewRouter,
 });

@@ -3,6 +3,7 @@ import {
   orders,
   productImages,
   products,
+  reviews,
   userRoles,
   users,
 } from "@/db/schema";
@@ -47,8 +48,16 @@ export const insertProductSchema = createInsertSchema(products, {
   archived: (schema) => schema.archived.optional().default(false),
   categoryId: (schema) =>
     schema.categoryId.min(1, "Product must belong to a category"),
-}).omit({ createdAt: true, updatedAt: true });
+});
 export type insertProductSchemaType = z.infer<typeof insertProductSchema>;
+
+export const selectReviewSchema = createSelectSchema(reviews, {});
+export type selectReviewSchemaType = z.infer<typeof selectReviewSchema>;
+
+export const insertReviewSchema = createInsertSchema(reviews, {
+  rate: (schema) => z.coerce.number().pipe(schema.rate.min(0).max(5)),
+});
+export type insertReviewSchemaType = z.infer<typeof insertReviewSchema>;
 
 export const selectImageSchema = createSelectSchema(productImages, {});
 export type selectImageSchemaType = z.infer<typeof selectImageSchema>;

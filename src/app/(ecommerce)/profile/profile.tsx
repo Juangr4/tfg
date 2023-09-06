@@ -14,6 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import { selectUserSchema, type selectUserSchemaType } from "@/lib/types";
 import { useSession } from "next-auth/react";
 import { useState, type FC } from "react";
@@ -52,7 +53,9 @@ export const AccountForm: FC<AccountFormProps> = ({ user: defaultValues }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 p-4">
+        <h3 className="text-xl font-semibold">Profile Settings</h3>
+
         <FormField
           control={form.control}
           name="name"
@@ -76,12 +79,12 @@ export const AccountForm: FC<AccountFormProps> = ({ user: defaultValues }) => {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input placeholder="Your email" {...field} />
               </FormControl>
               <FormDescription>
-                This is the email that will be used in your purchases.
+                This is the email that will be used for notifications.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -89,6 +92,10 @@ export const AccountForm: FC<AccountFormProps> = ({ user: defaultValues }) => {
         />
 
         <Button type="submit">Update account</Button>
+
+        <Separator />
+
+        <h3 className="text-xl font-semibold">Update your password</h3>
 
         <PasswordChanger />
       </form>

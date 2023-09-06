@@ -18,7 +18,7 @@ const MainHeader = () => {
   const debouncedText = useDebounce(search);
 
   useEffect(() => {
-    if (debouncedText === "" && !pathname.startsWith("/products")) return;
+    if (debouncedText === "" && pathname !== "/products") return;
     const params = new URLSearchParams(searchParams);
     params.set("search", debouncedText);
     router.push(`/products?${params.toString()}`);

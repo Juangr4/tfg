@@ -42,7 +42,9 @@ const ProfileMenu = () => {
         <DropdownMenuItem asChild>
           <Link href={"/profile"}>Profile</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>Billing</DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href={"/profile/orders"}>Orders</Link>
+        </DropdownMenuItem>
         <DropdownMenuItem
           onClick={async () => {
             await signOut({ callbackUrl: "/" });

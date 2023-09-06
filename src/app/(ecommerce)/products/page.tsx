@@ -36,7 +36,7 @@ export default async function ProductsPage({
   return (
     <div className="flex flex-col items-center justify-between p-24 gap-4 w-full">
       <h1 className="text-5xl pb-4">This is the Products Page</h1>
-      <div className="flex justify-between w-full">
+      <div className="flex justify-between w-full gap-8">
         <div className="w-1/5">
           <Filters />
         </div>

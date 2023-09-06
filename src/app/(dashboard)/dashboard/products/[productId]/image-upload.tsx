@@ -23,7 +23,10 @@ export const ImageUpload: FC<ImageUploadProps> = ({ productId }) => {
   };
 
   const uploadImage = async () => {
-    if (!file) return;
+    if (!file) {
+      inputRef.current?.click();
+      return;
+    }
     mutate(productId, {
       onSuccess(data, variables, context) {
         const formData = new FormData();
@@ -51,11 +54,14 @@ export const ImageUpload: FC<ImageUploadProps> = ({ productId }) => {
         </Label>
         <Input ref={inputRef} type="file" onChange={onImageChange} />
         <Button
-          disabled={isLoading || !file}
-          onClick={uploadImage}
+          disabled={isLoading}
+          onClick={(ev) => {
+            ev.preventDefault();
+            uploadImage();
+          }}
           className="w-full"
         >
-          Upload selected image
+          {!file ? "Choose image to upload" : "Upload selected image"}
         </Button>
       </div>
       <div>

@@ -1,6 +1,7 @@
 import { relations } from "drizzle-orm";
 import {
   boolean,
+  integer,
   json,
   pgEnum,
   pgTable,
@@ -8,6 +9,7 @@ import {
   real,
   text,
   timestamp,
+  unique,
   uuid,
 } from "drizzle-orm/pg-core";
 
@@ -15,7 +17,6 @@ export const products = pgTable("products", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: text("name").notNull(),
   description: text("description").notNull(),
-  // price: decimal("price", { scale: 2 }).notNull(),
   price: real("price").notNull(),
   archived: boolean("archived").notNull().default(false),
   categoryId: uuid("categoryId")
@@ -42,6 +43,39 @@ export const categoriesRelations = relations(categories, ({ many }) => ({
   products: many(products),
 }));
 
+export const reviews = pgTable(
+  "reviews",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+    title: text("title").notNull().default(""),
+    message: text("message").notNull().default(""),
+    rate: integer("rate").notNull(),
+    userId: uuid("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    productId: uuid("productId").references(() => products.id, {
+      onDelete: "cascade",
+    }),
+    createdAt: timestamp("createdAt", { mode: "string" }).defaultNow(),
+  },
+  (table) => {
+    return {
+      unq: unique("already_rated").on(table.userId, table.productId),
+    };
+  }
+);
+
+export const reviewsRelations = relations(reviews, ({ one }) => ({
+  user: one(users, {
+    fields: [reviews.userId],
+    references: [users.id],
+  }),
+  product: one(products, {
+    fields: [reviews.productId],
+    references: [products.id],
+  }),
+}));
+
 export const productImages = pgTable(
   "images",
   {
@@ -62,7 +96,7 @@ export const productImages = pgTable(
 
 export const productImagesRelations = relations(productImages, ({ one }) => ({
   product: one(products, {
-    fields: [productImages.id],
+    fields: [productImages.productId],
     references: [products.id],
   }),
 }));

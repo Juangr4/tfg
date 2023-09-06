@@ -14,7 +14,7 @@ import {
 } from "@/lib/types";
 import { imageHref } from "@/lib/utils";
 import { Separator } from "@radix-ui/react-dropdown-menu";
-import { CheckIcon, PlusIcon, ShoppingCartIcon } from "lucide-react";
+import { MinusIcon, PlusIcon, ShoppingCartIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { type FC } from "react";
@@ -29,11 +29,12 @@ const EcommerceCard: FC<EcommerceCardProps> = ({ product, image }) => {
   const router = useRouter();
 
   const addToCart = useCartStore((store) => store.addToCart);
+  const removeFromCart = useCartStore((store) => store.removeFromCart);
   const isInCart = useCartStore((store) => store.isInCart);
   // Added cartItems to enforce a re-render when it changes.
   const cartItems = useCartStore((store) => store.cartItems);
 
-  const isIn = isInCart(product) !== undefined;
+  const productIn = isInCart(product);
 
   return (
     <Card
@@ -42,7 +43,7 @@ const EcommerceCard: FC<EcommerceCardProps> = ({ product, image }) => {
       }}
       className="w-full hover:cursor-pointer grid p-2"
     >
-      <CardContent className="grid place-items-center border h-full">
+      <CardContent className="grid place-items-center h-full">
         <div className="grid place-items-center">
           <Image
             src={imageHref(image)}
@@ -57,20 +58,49 @@ const EcommerceCard: FC<EcommerceCardProps> = ({ product, image }) => {
       <CardHeader>
         <CardTitle>{product.name}</CardTitle>
         <CardDescription>${product.price}</CardDescription>
-        <Button
-          onClick={(event) => {
-            event.stopPropagation();
-            addToCart(product, image ?? undefined);
-          }}
-          variant={isIn ? "link" : "default"}
-        >
-          <ShoppingCartIcon />
-          {isIn ? (
-            <CheckIcon className="h-4 w-4" />
-          ) : (
+        {!productIn && (
+          <Button
+            onClick={(event) => {
+              event.stopPropagation();
+              addToCart(product, image ?? undefined);
+            }}
+            variant={"default"}
+          >
+            <ShoppingCartIcon />
             <PlusIcon className="h-4 w-4" />
-          )}
-        </Button>
+          </Button>
+        )}
+        {productIn && (
+          <>
+            <div className="grid grid-cols-2">
+              <Button
+                variant={"link"}
+                onClick={(ev) => {
+                  ev.stopPropagation();
+                  addToCart(product, image ?? undefined, 1);
+                }}
+              >
+                <ShoppingCartIcon />
+                <PlusIcon />
+              </Button>
+              <Button
+                variant={"link"}
+                onClick={(ev) => {
+                  ev.stopPropagation();
+                  removeFromCart(product, 1);
+                }}
+              >
+                <ShoppingCartIcon />
+                <MinusIcon />
+              </Button>
+            </div>
+            <div>
+              <p className="border rounded-md p-2 text-md font-semibold text-center">
+                {productIn.amount} inside the cart.
+              </p>
+            </div>
+          </>
+        )}
       </CardHeader>
     </Card>
   );

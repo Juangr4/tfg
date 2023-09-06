@@ -61,7 +61,7 @@ const ShoppingCartMenu = () => {
         ))}
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Button variant={"ghost"} className="m-2" asChild>
+          <Button variant={"secondary"} className="m-2 cursor-pointer" asChild>
             <Link href={"/checkout"}>Checkout</Link>
           </Button>
         </DropdownMenuItem>

@@ -99,7 +99,7 @@ export const ProductDetails: FC<ProductFormProps> = ({
                     Category:{" "}
                     {!!category && (
                       <Button variant={"link"} className="text-lg" asChild>
-                        <Link href={`/products/categories/${category.id}`}>
+                        <Link href={`/categories/${category.id}`}>
                           {category.name}
                         </Link>
                       </Button>

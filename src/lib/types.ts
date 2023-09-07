@@ -65,7 +65,9 @@ export type selectImageSchemaType = z.infer<typeof selectImageSchema>;
 export const insertImageSchema = createInsertSchema(productImages, {});
 export type insertImageSchemaType = z.infer<typeof insertImageSchema>;
 
-export const selectOrderSchema = createSelectSchema(orders, {});
+export const selectOrderSchema = createSelectSchema(orders, {
+  items: (schema) => z.unknown(),
+});
 export type selectOrderSchemaType = z.infer<typeof selectOrderSchema>;
 
 export const cartItem = z.object({

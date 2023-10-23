@@ -4,16 +4,16 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <div className="py-6 container">
-      <div className="grid grid-cols-3">
-        <div className="text-3xl font-bold pb-4 text-center">
+      <div className="grid md:grid-cols-3 [&>div]:text-center space-y-8 mb-8">
+        <div className="text-3xl font-bold md:pb-4">
           <Link href={"/"}>Logo</Link>
           <p className="text-lg font-semibold">Example Company</p>
         </div>
-        <div className="w-1/3 text-center">
-          <div className="mb-1">
+        <div className="flex flex-col items-center gap-1">
+          <div>
             <h4 className="text-md">Links</h4>
-            <Separator />
           </div>
+          <Separator className="w-1/3 mb-1" />
           <Link href="/dashboard" className="text-sm">
             Admin panel
           </Link>

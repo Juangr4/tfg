@@ -18,7 +18,8 @@ export const ReviewRouter = router({
       })
       .from(reviews)
       .where(eq(reviews.productId, productId))
-      .leftJoin(users, eq(users.id, reviews.userId));
+      .leftJoin(users, eq(users.id, reviews.userId))
+      .limit(10);
   }),
   rating: publicProcedure
     .input(z.string())

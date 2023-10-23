@@ -48,9 +48,9 @@ const UserPage: React.FC<UserPageProps> = async ({ params }) => {
             <TableHeader>
               <TableRow>
                 <TableHead>Id</TableHead>
-                <TableHead>Purchased At</TableHead>
                 <TableHead>Total</TableHead>
                 <TableHead>Paid</TableHead>
+                <TableHead>Purchased At</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -63,9 +63,9 @@ const UserPage: React.FC<UserPageProps> = async ({ params }) => {
                       </Link>
                     </Button>
                   </TableCell>
-                  <TableCell>{order.createdAt}$</TableCell>
-                  <TableCell>{order.total}</TableCell>
+                  <TableCell>{order.total}$</TableCell>
                   <TableCell>{String(order.isPaid)}</TableCell>
+                  <TableCell>{String(order.createdAt)}$</TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -1,8 +1,16 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/use-debounce";
-import { SearchIcon } from "lucide-react";
+import { MenuIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -26,11 +34,11 @@ const MainHeader = () => {
 
   return (
     <div className="py-6">
-      <div className="container sm:flex justify-between items-center">
-        <div className="text-center text-4xl font-bold pb-4">
+      <div className="container sm:flex justify-between items-center grid grid-cols-8 gap-2">
+        <div className="text-center text-4xl font-bold pb-4 col-span-8">
           <Link href={"/"}>Logo</Link>
         </div>
-        <div className="w-full md:w-[60%] sm:w-[350px] relative">
+        <div className="w-full md:w-[50%] sm:w-[350px] relative col-span-7">
           <Input
             className="w-full rounded-lg p-2 border"
             placeholder="Write any product"
@@ -44,6 +52,26 @@ const MainHeader = () => {
         <div className="hidden md:flex gap-4">
           <ProfileMenu />
           <ShoppingCartMenu />
+        </div>
+        <div className="md:hidden">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                <MenuIcon />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="flex flex-col justify-center items-center">
+              <DropdownMenuItem>
+                <ProfileMenu />
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                <Button asChild>
+                  <ShoppingCartMenu />
+                </Button>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>

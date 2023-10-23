@@ -90,16 +90,12 @@ export const OrderRouter = router({
     const orders = await dbClient.query.orders.findMany();
     return orders;
   }),
-  findByUser: loggedProcedure
+  findByUser: adminProcedure
     .input(z.string())
     .query(async ({ input: userId, ctx }) => {
-      if (ctx.session?.user.role !== "admin" || !ctx.session.user.email) return;
-      const user = await dbClient.query.users.findFirst({
-        where: eq(users.email, ctx.session.user.email),
-      });
-      if (!user) return;
+      if (ctx.session?.user.role !== "admin") return;
       return await dbClient.query.orders.findMany({
-        where: eq(orders.userId, user.id),
+        where: eq(orders.userId, userId),
       });
     }),
   allByUser: loggedProcedure

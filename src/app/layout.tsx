@@ -8,7 +8,7 @@ import "./globals.css";
 const montserrat = Montserrat({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "What a commerce",
+  title: "Imagine Store",
   description: "Best ecommerce website",
 };
 

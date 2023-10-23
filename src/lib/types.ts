@@ -70,6 +70,11 @@ export const selectOrderSchema = createSelectSchema(orders, {
 });
 export type selectOrderSchemaType = z.infer<typeof selectOrderSchema>;
 
+export const insertOrderSchema = createInsertSchema(orders, {
+  items: (schema) => z.unknown(),
+});
+export type insertOrderSchemaType = z.infer<typeof insertOrderSchema>;
+
 export const cartItem = z.object({
   product: selectProductSchema,
   amount: z.number(),

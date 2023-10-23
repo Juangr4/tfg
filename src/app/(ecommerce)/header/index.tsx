@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/use-debounce";
 import { MenuIcon, SearchIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -36,7 +37,9 @@ const MainHeader = () => {
     <div className="py-6">
       <div className="container sm:flex justify-between items-center grid grid-cols-8 gap-2">
         <div className="text-center text-4xl font-bold pb-4 col-span-8">
-          <Link href={"/"}>Logo</Link>
+          <Link href={"/"}>
+            <Image src={"/logo.png"} alt="Logo" width={256} height={64} />
+          </Link>
         </div>
         <div className="w-full md:w-[50%] sm:w-[350px] relative col-span-7">
           <Input

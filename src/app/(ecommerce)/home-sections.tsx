@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 // https://merakiui.gumroad.com/l/hero-header?layout=profile
@@ -7,10 +8,12 @@ export const MainSection = () => {
       <div className="relative grid w-full bg-indigo-500 h-96 lg:h-[32rem] place-items-center">
         <div className="flex flex-col items-center mx-auto text-center">
           <h1 className="text-4xl font-semibold text-white uppercase md:text-6xl">
-            Main Content
+            Imagine
           </h1>
 
-          <p className="mt-6 text-lg leading-5 text-white">The best in town.</p>
+          <p className="mt-6 text-lg leading-5 text-white">
+            The best eCommerce in the world.
+          </p>
 
           <a href="#about" className="mt-8 cursor-pointer animate-bounce">
             <svg
@@ -48,14 +51,13 @@ export const AboutSection = () => {
       <div className="lg:flex lg:items-center lg:-mx-4">
         <div className="lg:w-1/2 lg:px-4">
           <h3 className="text-xl font-medium text-gray-800 md:text-2xl lg:text-3xl">
-            We create awesome prototypes, plugins, and templates.
+            We sell products in almost every possible category.
           </h3>
 
           <p className="mt-6 text-gray-500 ">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic
-            laboriosam provident voluptatum id magni iste nobis corrupti,
-            delectus quis repellat, debitis error quod explicabo molestiae rerum
-            totam ab sunt excepturi?
+            We have all kinds of products, from gnomes for your home garden to
+            computer equipment or slippers. Everything you want just a click
+            away, what are you waiting for? Buy now
           </p>
 
           <Link
@@ -86,10 +88,12 @@ export const AboutSection = () => {
         </div>
 
         <div className="mt-8 lg:w-1/2 lg:px-4 lg:mt-0">
-          <img
+          <Image
+            src={"/home_section.jpg"}
+            alt="People shopping"
+            width={640}
+            height={480}
             className="object-cover w-full rounded-xl h-96"
-            src="https://images.unsplash.com/photo-1516131206008-dd041a9764fd?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=880&q=80"
-            alt="Video thumbnail"
           />
         </div>
       </div>
@@ -126,11 +130,11 @@ export const AdvantagesSection = () => {
           </span>
 
           <h1 className="text-2xl font-semibold text-gray-700 capitalize">
-            web design
+            Best offers
           </h1>
 
           <p className="text-gray-500">
-            Research, user experience testing, mockups, and prototypes
+            We provide the best offers in the market
           </p>
         </div>
 
@@ -153,11 +157,11 @@ export const AdvantagesSection = () => {
           </span>
 
           <h1 className="text-2xl font-semibold text-gray-700 capitalize">
-            development
+            Simplicity
           </h1>
 
           <p className="text-gray-500">
-            Research, user experience testing, mockups, and prototypes
+            Easy experience for all types of users
           </p>
         </div>
 
@@ -180,11 +184,11 @@ export const AdvantagesSection = () => {
           </span>
 
           <h1 className="text-2xl font-semibold text-gray-700 capitalize">
-            research
+            Transparency
           </h1>
 
           <p className="text-gray-500">
-            Research, user experience testing, mockups, and prototypes
+            We offer what we have, there are no small print or traps.
           </p>
         </div>
       </div>

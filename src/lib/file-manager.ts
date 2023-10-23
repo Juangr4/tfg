@@ -34,3 +34,20 @@ export const removeImageFolder = async (path: string) => {
     });
   } catch (error) {}
 };
+
+export const downloadFromUrl = async (
+  url: string,
+  path: string,
+  filename: string
+) => {
+  const actualPath = process.cwd();
+  const filePath = `${actualPath}/public/images/${path}`;
+
+  if (!existsSync(filePath)) await mkdir(filePath, { recursive: true });
+
+  const imageBuffer = await (await fetch(url)).arrayBuffer();
+
+  await sharp(imageBuffer).toFile(
+    `${actualPath}/public/images/${path}/${filename}.webp`
+  );
+};

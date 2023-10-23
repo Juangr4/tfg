@@ -19,7 +19,7 @@ const DashboardNavbar = () => {
   return (
     <header className="flex w-full items-center justify-between h-12 p-6 border-b-2">
       <div className="text-xl">
-        <span className="font-semibold">Logo</span> dashboard
+        <span className="font-semibold">Imagine</span> dashboard
       </div>
       <nav className="flex items-center justify-center gap-x-2">
         <Button variant={"link"} asChild>

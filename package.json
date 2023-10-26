@@ -10,7 +10,8 @@
     "studio": "drizzle-kit studio",
     "db:push": "drizzle-kit push:pg",
     "db:populate": "node -r esbuild-register src/db/migrate.ts",
-    "db": "npm run db:push && npm run db:populate"
+    "db": "npm run db:push && npm run db:populate",
+    "experimental-build": "next experimental-compile"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.3.2",

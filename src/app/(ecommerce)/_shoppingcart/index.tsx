@@ -87,7 +87,7 @@ export const useCartStore = create<State>()((set, get) => ({
         .parse(JSON.parse(localStorage.getItem("cartItems") ?? "[]"));
       set((state) => ({ cartItems, loaded: true }));
     } catch (error) {
-      console.log("Shopping Cart Corrupted");
+      console.error("Error loading shopping cart");
       set((state) => ({ loaded: true }));
     }
   },

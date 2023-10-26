@@ -12,8 +12,6 @@ interface ImageSliderProps {
 }
 
 const ImageSlider = ({ images }: ImageSliderProps) => {
-  console.log(images);
-
   const [selected, setSelected] = useState(
     images.length === 0 ? undefined : images[0]
   );

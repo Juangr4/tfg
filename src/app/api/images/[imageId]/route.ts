@@ -35,8 +35,7 @@ export const POST = async (
           uploaded: true,
         })
         .where(eq(productImages.id, image.id));
-      const info = await saveImage(file, image.productId, image.id);
-      console.log(info);
+      await saveImage(file, image.productId, image.id);
     });
 
     return new NextResponse("Upload Completed", { status: 200 });

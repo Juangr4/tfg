@@ -19,6 +19,7 @@ export const ActionsMenu: FC<ActionsMenuProps> = ({ product, image }) => {
   const removeFromCart = useCartStore((store) => store.removeFromCart);
   const isInCart = useCartStore((store) => store.isInCart);
   // Used to perform a re-render on cart change.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const cartItems = useCartStore((store) => store.cartItems);
 
   const itemIn = isInCart(product);

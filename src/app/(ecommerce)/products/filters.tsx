@@ -40,7 +40,6 @@ export const Filters = () => {
   const debouncedCategories = useDebounce(selectedCategories);
 
   useEffect(() => {
-    console.log("Tick");
     const params = [];
     params.push({ name: "minPrice", value: String(debouncedMinPrice) });
     params.push({ name: "maxPrice", value: String(debouncedMaxPrice) });

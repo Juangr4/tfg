@@ -70,12 +70,10 @@ export const UsersRouter = router({
         return newUsers[0];
       } else if (ctx.session?.user.email) {
         // User context -> Check if can edit the user.
-        console.log("Entre");
         const user = await dbClient.query.users.findFirst({
           where: eq(users.email, ctx.session.user.email),
         });
         if (user?.id !== input.id) return;
-        console.log("Edite");
         const newUsers = await dbClient
           .update(users)
           .set(input)

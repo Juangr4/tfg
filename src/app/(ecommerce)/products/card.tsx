@@ -32,6 +32,7 @@ const EcommerceCard: FC<EcommerceCardProps> = ({ product, image }) => {
   const removeFromCart = useCartStore((store) => store.removeFromCart);
   const isInCart = useCartStore((store) => store.isInCart);
   // Added cartItems to enforce a re-render when it changes.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const cartItems = useCartStore((store) => store.cartItems);
 
   const productIn = isInCart(product);

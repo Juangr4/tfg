@@ -30,7 +30,7 @@ export const OrderRouter = router({
 
         if (!user || !itemsToBuy || itemsToBuy.length === 0) {
           tx.rollback();
-          console.log("Error creating the payment");
+          console.error("Error creating the payment");
           return;
         }
 

@@ -36,11 +36,11 @@ const ProductDetailsPage: FC<ProductDetailsPageProps> = async ({ params }) => {
 
   return (
     <>
-      <div className="flex justify-center items-center h-full gap-4 w-4/5">
-        <div className="w-1/2">
+      <div className="grid xl:flex justify-center items-center h-full gap-4 w-4/5">
+        <div className="xl:w-1/2 pt-8 xl:pt-0">
           <ImageSlider images={product.images} />
         </div>
-        <div className="w-1/2 h-full flex flex-col items-center p-4 gap-4">
+        <div className="xl:w-1/2 h-full flex flex-col items-center p-4 gap-4">
           <div className="w-full flex flex-col gap-3">
             <h2 className="text-3xl font-bold text-left capitalize">
               {product.name}

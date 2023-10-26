@@ -43,7 +43,8 @@ export type selectProductSchemaType = z.infer<typeof selectProductSchema>;
 export const insertProductSchema = createInsertSchema(products, {
   name: (schema) => schema.name.min(1),
   description: (schema) => schema.description.min(1),
-  price: (schema) => z.coerce.number().pipe(schema.price.multipleOf(0.01)),
+  price: (schema) =>
+    z.coerce.number().pipe(schema.price.gt(0).multipleOf(0.01)),
   // price: (schema) => schema.price.pipe(z.number().multipleOf(0.01).gte(0)),
   archived: (schema) => schema.archived.optional().default(false),
   categoryId: (schema) =>
@@ -51,7 +52,9 @@ export const insertProductSchema = createInsertSchema(products, {
 });
 export type insertProductSchemaType = z.infer<typeof insertProductSchema>;
 
-export const selectReviewSchema = createSelectSchema(reviews, {});
+export const selectReviewSchema = createSelectSchema(reviews, {
+  rate: (schema) => schema.rate.gte(0).lte(5),
+});
 export type selectReviewSchemaType = z.infer<typeof selectReviewSchema>;
 
 export const insertReviewSchema = createInsertSchema(reviews, {

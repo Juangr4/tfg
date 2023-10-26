@@ -18,7 +18,7 @@ import {
   type insertReviewSchemaType,
   type selectProductSchemaType,
 } from "@/lib/types";
-import { cn } from "@/lib/utils";
+import { cn, handleFormErrors } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { StarIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -63,16 +63,7 @@ export const ProductReviews: FC<ProductsReviewsProps> = ({ product }) => {
             variant: "destructive",
           });
         if (!error.data?.zodError) return;
-        const errors = error.data.zodError.fieldErrors;
-        for (const key in errors) {
-          const issues = errors[key];
-          issues?.forEach((issue) => {
-            form.setError(key as keyof insertReviewSchemaType, {
-              type: "custom",
-              message: issue,
-            });
-          });
-        }
+        handleFormErrors(error.data.zodError, form);
       },
     });
   };

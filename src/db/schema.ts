@@ -4,7 +4,7 @@ import {
   integer,
   json,
   pgEnum,
-  pgTable,
+  pgTableCreator,
   primaryKey,
   real,
   text,
@@ -12,6 +12,8 @@ import {
   unique,
   uuid,
 } from "drizzle-orm/pg-core";
+
+export const pgTable = pgTableCreator((name) => `testing_${name}`);
 
 export const products = pgTable("products", {
   id: uuid("id").defaultRandom().primaryKey(),

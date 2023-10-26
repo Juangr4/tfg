@@ -17,6 +17,7 @@ import {
   type insertCategorySchemaType,
   type selectProductSchemaType,
 } from "@/lib/types";
+import { handleFormErrors } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, Check, X } from "lucide-react";
 import Link from "next/link";
@@ -47,16 +48,7 @@ export const CategoryDetails: FC<CategoryFormProps> = ({
     mutate(data, {
       onError(error, variables, context) {
         if (!error.data?.zodError) return;
-        const errors = error.data.zodError.fieldErrors;
-        for (const key in errors) {
-          const issues = errors[key];
-          issues?.forEach((issue) => {
-            form.setError(key as keyof insertCategorySchemaType, {
-              type: "custom",
-              message: issue,
-            });
-          });
-        }
+        handleFormErrors(error.data.zodError, form);
         setCategory(variables);
       },
       onSuccess(data, variables, context) {

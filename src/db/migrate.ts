@@ -1,8 +1,8 @@
 import {
-  type insertCategorySchemaType,
   type insertImageSchemaType,
   type insertOrderSchemaType,
   type insertProductSchemaType,
+  type insertReviewSchemaType,
   type insertUserSchemaType,
   type selectCategorySchemaType,
   type selectImageSchemaType,
@@ -16,13 +16,21 @@ import postgres from "postgres";
 import { exit } from "process";
 import config from "../../drizzle.config";
 import { downloadFromUrl } from "../lib/file-manager";
-import { categories, orders, productImages, products, users } from "./schema";
+import {
+  categories,
+  orders,
+  productImages,
+  products,
+  reviews,
+  users,
+} from "./schema";
 
 const NUMBER_OF_USERS = 10;
 const NUMBER_OF_CATEGORIES = 5;
 const NUMBER_OF_PRODUCTS = 20;
-const NUMBER_OF_IMAGES = 1; // total image files -> NUMBER_OF_IMAGES * NUMBER_OF_PRODUCTS
+const NUMBER_OF_IMAGES = 0; // total image files -> NUMBER_OF_IMAGES * NUMBER_OF_PRODUCTS
 const NUMBER_OF_ORDERS = 25;
+const NUMBER_OF_REVIEWS = 160; // Must be lower than NUMBER_OF_USERS * NUMBER_OF_PRODUCTS;
 
 const createRandomUser: (password: string) => insertUserSchemaType = (
   password
@@ -70,6 +78,19 @@ const createRandomOrder: (
   };
 };
 
+const createRandomReview: (
+  user: selectUserSchemaType,
+  product: selectProductSchemaType
+) => insertReviewSchemaType = (user, product) => {
+  return {
+    userId: user.id,
+    productId: product.id,
+    rate: faker.number.int(5),
+    title: faker.lorem.words({ min: 1, max: 5 }),
+    message: faker.lorem.text(),
+  };
+};
+
 const main = async () => {
   console.log("Starting migration");
 
@@ -100,10 +121,10 @@ const main = async () => {
 
   const userPassword = await hash("1234", 10);
 
-  const rawUsers: insertUserSchemaType[] = [];
-  for (let i = 0; i < NUMBER_OF_USERS; i++) {
-    rawUsers.push(createRandomUser(userPassword));
-  }
+  const rawUsers = faker.helpers.multiple(
+    () => createRandomUser(userPassword),
+    { count: NUMBER_OF_USERS }
+  );
 
   const createdUsers = await migratorClient
     .insert(users)
@@ -111,20 +132,22 @@ const main = async () => {
     .onConflictDoNothing()
     .returning();
 
-  const rawCategories: insertCategorySchemaType[] = [];
-  for (let i = 0; i < NUMBER_OF_CATEGORIES; i++) {
-    rawCategories.push({ name: faker.commerce.department() });
-  }
+  const rawCategories = faker.helpers.multiple(
+    () => ({
+      name: faker.commerce.department(),
+    }),
+    { count: NUMBER_OF_CATEGORIES }
+  );
 
   const createdCategories = await migratorClient
     .insert(categories)
     .values(rawCategories)
     .returning();
 
-  const rawProducts: insertProductSchemaType[] = [];
-  for (let i = 0; i < NUMBER_OF_PRODUCTS; i++) {
-    rawProducts.push(createRandomProduct(createdCategories));
-  }
+  const rawProducts = faker.helpers.multiple(
+    () => createRandomProduct(createdCategories),
+    { count: NUMBER_OF_PRODUCTS }
+  );
 
   const createdProducts = await migratorClient
     .insert(products)
@@ -132,32 +155,53 @@ const main = async () => {
     .returning();
 
   // https://byby.dev/node-download-image
-  // TODO: Perform image download
-  // Be careful with the disk space
-  const rawImages: insertImageSchemaType[] = [];
-  let product: selectProductSchemaType;
-  for (product of createdProducts) {
-    for (let i = 0; i < NUMBER_OF_IMAGES; i++) {
-      rawImages.push({ productId: product.id, uploaded: true });
+  if (NUMBER_OF_IMAGES > 0) {
+    const rawImages: insertImageSchemaType[] = [];
+    let product: selectProductSchemaType;
+    for (product of createdProducts) {
+      for (let i = 0; i < NUMBER_OF_IMAGES; i++) {
+        rawImages.push({ productId: product.id, uploaded: true });
+      }
+    }
+    const createdImages = await migratorClient
+      .insert(productImages)
+      .values(rawImages)
+      .returning();
+
+    let image: selectImageSchemaType;
+    for (image of createdImages) {
+      const url = faker.image.url();
+      await downloadFromUrl(url, image.productId, image.id);
     }
   }
-  const createdImages = await migratorClient
-    .insert(productImages)
-    .values(rawImages)
-    .returning();
 
-  let image: selectImageSchemaType;
-  for (image of createdImages) {
-    const url = faker.image.url();
-    await downloadFromUrl(url, image.productId, image.id);
+  if (NUMBER_OF_ORDERS > 0) {
+    const rawOrders: insertOrderSchemaType[] = [];
+    for (let i = 0; i < NUMBER_OF_ORDERS; i++) {
+      const client = faker.helpers.arrayElement(createdUsers);
+      rawOrders.push(createRandomOrder(client, createdProducts));
+    }
+    await migratorClient.insert(orders).values(rawOrders);
   }
 
-  const rawOrders: insertOrderSchemaType[] = [];
-  for (let i = 0; i < NUMBER_OF_ORDERS; i++) {
-    const client = faker.helpers.arrayElement(createdUsers);
-    rawOrders.push(createRandomOrder(client, createdProducts));
+  if (
+    NUMBER_OF_REVIEWS > 0 &&
+    NUMBER_OF_REVIEWS <= NUMBER_OF_PRODUCTS * NUMBER_OF_USERS
+  ) {
+    const memory = faker.helpers.shuffle(
+      createdUsers.flatMap((user) =>
+        createdProducts.map((product) => ({ user, product }))
+      )
+    );
+    const rawReviews: insertReviewSchemaType[] = [];
+    for (let i = 0; i < NUMBER_OF_REVIEWS; i++) {
+      const data = memory.pop();
+      if (!data) break;
+      rawReviews.push(createRandomReview(data.user, data.product));
+    }
+
+    await migratorClient.insert(reviews).values(rawReviews);
   }
-  await migratorClient.insert(orders).values(rawOrders);
 
   console.log("Migration finished");
 };

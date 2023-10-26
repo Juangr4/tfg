@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { type insertProductSchemaType } from "@/lib/types";
+import { handleFormErrors } from "@/lib/utils";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { useState, type FC } from "react";
@@ -43,6 +44,10 @@ export const ProductDetails: FC<ProductFormProps> = ({
         setProduct(data ?? variables);
         refetch();
         setEditing(false);
+      },
+      onError(error, variables, context) {
+        if (!error.data?.zodError) return;
+        handleFormErrors(error.data.zodError, form);
       },
     });
   };

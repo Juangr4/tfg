@@ -1,4 +1,5 @@
 import { Separator } from "@/components/ui/separator";
+import { FacebookIcon, InstagramIcon, TwitterIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -25,7 +26,17 @@ const Footer = () => {
       </div>
       <Separator />
       <div className="text-center">
-        <p>Social medias here</p>
+        <div className="flex justify-center gap-x-2 p-1" id="contact">
+          <a href="#">
+            <InstagramIcon />
+          </a>
+          <a href="#">
+            <FacebookIcon />
+          </a>
+          <a href="#">
+            <TwitterIcon />
+          </a>
+        </div>
         <p>&copy;Copyright. All rights reserved.</p>
       </div>
     </div>

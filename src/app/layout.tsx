@@ -22,6 +22,13 @@ export default function RootLayout({
       <body className={montserrat.className}>
         <NextAuthProvider>
           <TRPCProvider>
+            <div className="text-center bg-green-950 text-white py-1">
+              The content of the page is not real. All purchases and actions
+              won&apos;t have any reflected action in real life.{" "}
+              <a href="#" className="font-semibold">
+                More Info.
+              </a>
+            </div>
             {children}
             <Toaster />
           </TRPCProvider>

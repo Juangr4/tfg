@@ -23,7 +23,10 @@ export const OrderRouter = router({
         });
 
         const itemsToBuy: cartItemType[] = productsToBuy.map((product) => ({
-          product,
+          product: {
+            ...product,
+            price: Math.round(product.price * 100) / 100,
+          },
           amount:
             input.find((item) => item.product.id === product.id)?.amount ?? 0,
         }));
@@ -44,7 +47,7 @@ export const OrderRouter = router({
               product_data: {
                 name: item.product.name,
               },
-              unit_amount: item.product.price * 100,
+              unit_amount: Math.round(item.product.price * 100),
             },
           });
         });

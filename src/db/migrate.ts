@@ -27,12 +27,12 @@ import {
 
 loadEnvConfig(cwd());
 
-const NUMBER_OF_USERS = 10;
+const NUMBER_OF_USERS = 15;
 const NUMBER_OF_CATEGORIES = 5;
-const NUMBER_OF_PRODUCTS = 20;
-const NUMBER_OF_IMAGES = 0; // total image files -> NUMBER_OF_IMAGES * NUMBER_OF_PRODUCTS
+const NUMBER_OF_PRODUCTS = 75;
+const NUMBER_OF_IMAGES = 3; // total image files -> NUMBER_OF_IMAGES * NUMBER_OF_PRODUCTS
 const NUMBER_OF_ORDERS = 25;
-const NUMBER_OF_REVIEWS = 160; // Must be lower than NUMBER_OF_USERS * NUMBER_OF_PRODUCTS;
+const NUMBER_OF_REVIEWS = 250; // Must be lower than NUMBER_OF_USERS * NUMBER_OF_PRODUCTS;
 
 const createRandomUser: (password: string) => insertUserSchemaType = (
   password

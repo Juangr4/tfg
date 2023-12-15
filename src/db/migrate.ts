@@ -10,11 +10,11 @@ import {
   type selectUserSchemaType,
 } from "@/lib/types";
 import { faker } from "@faker-js/faker";
+import { loadEnvConfig } from "@next/env";
 import { hash } from "bcrypt";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
-import { exit } from "process";
-import config from "../../drizzle.config";
+import { cwd, exit } from "process";
 import { downloadFromUrl } from "../lib/file-manager";
 import {
   categories,
@@ -24,6 +24,8 @@ import {
   reviews,
   users,
 } from "./schema";
+
+loadEnvConfig(cwd());
 
 const NUMBER_OF_USERS = 10;
 const NUMBER_OF_CATEGORIES = 5;
@@ -94,9 +96,7 @@ const createRandomReview: (
 const main = async () => {
   console.log("Starting migration");
 
-  const credentials = config.dbCredentials;
-  const url = `postgres://${credentials.user}:${credentials.password}@${credentials.host}:${credentials.port}/${credentials.database}`;
-  const migrationsClient = postgres(url);
+  const migrationsClient = postgres(process.env.DATABASE_URL as string);
   const migratorClient = drizzle(migrationsClient, { logger: false });
 
   console.log("Drop all table data");

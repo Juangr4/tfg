@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { dbClient } from "@/db";
 import { orders } from "@/db/schema";
-import { cartItem } from "@/lib/types";
+import { cartItem, type cartItemType } from "@/lib/types";
 import { eq } from "drizzle-orm";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -30,7 +30,11 @@ const OrderPage: React.FC<OrderPageProps> = async ({ params }) => {
     return redirect("dashboard/orders");
   }
 
-  const items = z.array(cartItem).parse(order.items);
+  console.log(order.items);
+  let items: cartItemType[] = [];
+  if (z.array(cartItem).safeParse(order.items).success) {
+    items = z.array(cartItem).parse(order.items);
+  }
 
   return (
     <div className="flex flex-col items-start h-full w-full gap-4 p-4">

@@ -4,6 +4,8 @@ import { Separator } from "@/components/ui/separator";
 import { productColumnsDefinition } from "./columns";
 import { DialogProductForm } from "./dialog-form";
 
+export const dynamic = "force-dynamic";
+
 const ProductsPage = async () => {
   const products = await serverClient.products.all();
 

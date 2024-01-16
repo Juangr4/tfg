@@ -3,6 +3,8 @@ import { DataTable } from "@/components/data-table";
 import { Separator } from "@/components/ui/separator";
 import { orderColumnsDefinition } from "./columns";
 
+export const dynamic = "force-dynamic";
+
 const OrdersPage = async () => {
   const orders = await serverClient.orders.all();
 

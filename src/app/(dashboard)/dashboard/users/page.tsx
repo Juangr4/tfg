@@ -3,6 +3,8 @@ import { DataTable } from "@/components/data-table";
 import { Separator } from "@/components/ui/separator";
 import { userColumnsDefinition } from "./columns";
 
+export const dynamic = "force-dynamic";
+
 const UsersPage = async () => {
   const users = await serverClient.users.all();
 

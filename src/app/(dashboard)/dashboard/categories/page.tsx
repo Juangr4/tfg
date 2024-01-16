@@ -4,6 +4,8 @@ import { Separator } from "@/components/ui/separator";
 import { categoryColumnsDefinition } from "./columns";
 import { DialogCategoryForm } from "./dialog-form";
 
+export const dynamic = "force-dynamic";
+
 const CategoriesPage = async () => {
   const categories = await serverClient.categories.all();
 

@@ -1,23 +1,15 @@
-FROM node:18-alpine AS base
+FROM node:18-alpine
 
-FROM base AS builder
 RUN apk add --no-cache libc6-compat
+
 WORKDIR /app
+
 COPY . .
 
-ENV NEXT_TELEMETRY_DISABLED 1
+RUN npm install
 
-RUN npm ci
-RUN npm run experimental-build
-
-FROM base AS runner
-WORKDIR /app
-
-ENV NODE_ENV production
-ENV NEXT_TELEMETRY_DISABLED 1
-
-COPY --from=builder /app .
+RUN npm run build
 
 EXPOSE 3000
 
-CMD ["npm", "run", "start"]
+CMD ["npm", "run", "db-and-start"]

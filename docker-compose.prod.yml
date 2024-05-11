@@ -2,20 +2,17 @@ version: "3.9"
 
 services:
   web:
-    image: node:18-alpine
+    build: .
+    image: whatacommerce
     ports:
       - "3000:3000"
     volumes:
-      - ./:/app
+      - ./.env.local:/app/.env.local
     depends_on:
       db:
         required: true
         condition: service_healthy
-      stripe:
-        required: true
-        condition: service_started
-    working_dir: /app
-    command: sh -c "npm i && npm run db && npm run dev"
+    command: sh -c "npm run db && npm run start"
   db:
     image: postgres
     restart: always
@@ -30,10 +27,3 @@ services:
       interval: 10s
       timeout: 3s
       retries: 3
-  stripe:
-    image: stripe/stripe-cli
-    restart: always
-    command: listen --forward-to web:3000/api/webhooks/stripe
-    environment:
-      STRIPE_API_KEY: ${STRIPE_SECRET_KEY}
-      STRIPE_DEVICE_NAME: "Local Development"

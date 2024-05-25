@@ -11,7 +11,8 @@
     "db:push": "drizzle-kit push:pg",
     "db:populate": "node -r esbuild-register src/db/migrate.ts",
     "db": "npm run db:push && npm run db:populate",
-    "experimental-build": "next experimental-compile"
+    "experimental-build": "next experimental-compile",
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^0.3.2",
@@ -70,6 +71,8 @@
     "@faker-js/faker": "^8.2.0",
     "@types/better-sqlite3": "^7.6.4",
     "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "cypress": "^13.8.1",
+    "dotenv": "^16.4.5",
     "drizzle-kit": "^0.19.13",
     "eslint": "^8.47.0",
     "eslint-config-prettier": "^9.0.0",

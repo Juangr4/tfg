@@ -1,0 +1,9 @@
+{
+  "include": ["../node_modules/cypress", "*/**/*.ts"],
+  "compilerOptions": {
+    "baseUrl": "..",
+    "paths": {
+      "@/*": ["src/*"]
+    }
+  }
+}

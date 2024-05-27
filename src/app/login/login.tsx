@@ -63,6 +63,9 @@ export function SignInForm() {
         </div>
       </CardContent>
       <CardFooter className="grid gap-4">
+        {searchParams.get("error") === "CredentialsSignin" && (
+          <p className="text-red-600 text-sm">Invalid email or password.</p>
+        )}
         <Button onClick={onLogin} className="w-full">
           Login
         </Button>

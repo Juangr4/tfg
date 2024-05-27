@@ -33,6 +33,14 @@ export const UsersRouter = router({
   create: publicProcedure
     .input(insertUserSchema)
     .mutation(async ({ input }) => {
+      if (
+        !input.email.match(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/)
+      ) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid email.",
+        });
+      }
       const hashedPassword = await hash(input.password, 10);
       const newUsers = await dbClient
         .insert(users)

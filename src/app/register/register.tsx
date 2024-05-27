@@ -17,7 +17,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useToast } from "@/components/ui/use-toast";
 import { insertUserSchema, type insertUserSchemaType } from "@/lib/types";
+import { handleFormErrors } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
@@ -29,6 +31,7 @@ export function RegisterForm() {
     resolver: zodResolver(insertUserSchema),
   });
   const { mutate } = trpc.users.create.useMutation();
+  const { toast } = useToast();
 
   const onSubmit = async (data: insertUserSchemaType) => {
     mutate(data, {
@@ -36,17 +39,26 @@ export function RegisterForm() {
         router.push("/");
       },
       onError(error, variables, context) {
-        if (!error.data?.zodError) return;
-        const errors = error.data.zodError.fieldErrors;
-        for (const key in errors) {
-          const issues = errors[key];
-          issues?.forEach((issue) => {
-            form.setError(key as keyof insertUserSchemaType, {
-              type: "custom",
-              message: issue,
-            });
+        if (
+          error.message.includes(
+            "duplicate key value violates unique constraint"
+          )
+        ) {
+          toast({
+            title: "Error",
+            description: "Email already used.",
+            variant: "destructive",
           });
         }
+        if (error.message === "Invalid email.") {
+          toast({
+            title: "Error",
+            description: "Invalid email.",
+            variant: "destructive",
+          });
+        }
+        if (!error.data?.zodError) return;
+        handleFormErrors(error.data.zodError, form);
       },
     });
   };

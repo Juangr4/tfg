@@ -12,4 +12,4 @@ RUN npm run build
 
 EXPOSE 3000
 
-CMD ["npm", "run", "db-and-start"]
+CMD [ "sh", "-c", "'npm i && npm run db && npm run dev'" ]

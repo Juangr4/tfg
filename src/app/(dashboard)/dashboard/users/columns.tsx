@@ -3,7 +3,7 @@ import { DataTableColumnHeader } from "@/components/data-table";
 import { Button } from "@/components/ui/button";
 import { type selectUserSchemaType } from "@/lib/types";
 import { type ColumnDef } from "@tanstack/react-table";
-import { Pencil, Trash } from "lucide-react";
+import { Pencil } from "lucide-react";
 import Link from "next/link";
 
 export const userColumnsDefinition: Array<ColumnDef<selectUserSchemaType>> = [
@@ -37,14 +37,6 @@ export const userColumnsDefinition: Array<ColumnDef<selectUserSchemaType>> = [
             <Link href={`/dashboard/users/${user.id}`}>
               <Pencil className="h-4 w-4" />
             </Link>
-          </Button>
-          <Button
-            variant="ghost"
-            onClick={async (ev) => {
-              console.log("removed");
-            }}
-          >
-            <Trash className="h-4 w-4" />
           </Button>
         </div>
       );
